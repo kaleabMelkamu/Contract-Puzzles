@@ -16,11 +16,15 @@ contract Escrow {
         depositor = msg.sender;
     }
 
+    event Approved(uint);
+
     function approve() external 
     {
         require(msg.sender == arbiter);
+        uint balance = address(this).balance;
         (bool sent,) = beneficiary.call {value : address(this).balance} ("");
         require(sent, "failed to send Ether");
+        emit Approved(balance);
         isApproved=true;
     }
 
